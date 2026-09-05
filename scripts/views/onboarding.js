@@ -23,6 +23,25 @@ const SIGNS = [
   { sign: "Capricorn", endMonth: 12, endDay: 31, blurb: "Patient and long-game — you build things that are still standing years later." }
 ];
 
+// Aurora Bloom: each sign's classical element gets its own gradient for the
+// "10 free tokens" card's top-border accent (see --card-accent in app.css,
+// which every .card falls back to var(--gradient-sunrise) without) — a
+// small, honest way to vary a card "per zodiac sign color" without
+// inventing chart data this build doesn't have (see the README's real-vs-
+// simulated section).
+const SIGN_ELEMENT = {
+  Aries: "fire", Leo: "fire", Sagittarius: "fire",
+  Taurus: "earth", Virgo: "earth", Capricorn: "earth",
+  Gemini: "air", Libra: "air", Aquarius: "air",
+  Cancer: "water", Scorpio: "water", Pisces: "water"
+};
+const ELEMENT_GRADIENT = {
+  fire: "linear-gradient(90deg, var(--sunrise-coral), var(--sunrise-amber))",
+  earth: "linear-gradient(90deg, var(--sunrise-amber), var(--accent-teal))",
+  air: "linear-gradient(90deg, var(--accent-teal), var(--sunrise-amber))",
+  water: "linear-gradient(90deg, var(--accent-teal), var(--accent-violet))"
+};
+
 function sunSignFor(dateStr) {
   if (!dateStr) return null;
   const [, m, d] = dateStr.split("-").map(Number);
@@ -133,7 +152,7 @@ export function renderOnboarding(shell) {
               <h1 class="h1" id="revealHeadline"></h1>
               <p class="lede" style="margin:0 auto" id="revealBody"></p>
             </div>
-            <div class="card" style="width:100%; text-align:left; display:flex; align-items:center; gap:.85rem;">
+            <div class="card" id="tokenRevealCard" style="width:100%; text-align:left; display:flex; align-items:center; gap:.85rem;">
               <div style="width:2.4rem;height:2.4rem;border-radius:50%;background:var(--brass-tint);display:grid;place-items:center;flex-shrink:0;">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--brass-strong)" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/></svg>
               </div>
@@ -220,6 +239,11 @@ export function renderOnboarding(shell) {
     body.textContent = fNoTime.checked
       ? entry.blurb + " Add your exact birth time later and we'll layer in your moon and rising sign."
       : entry.blurb + " Moon and rising placements need a full ephemeris lookup — we'll add those once that's connected.";
+
+    const element = SIGN_ELEMENT[entry.sign];
+    const tokenCard = shell.querySelector("#tokenRevealCard");
+    if (tokenCard) tokenCard.style.setProperty("--card-accent", ELEMENT_GRADIENT[element] || "");
+
     shell.dataset.sunSign = entry.sign;
     shell.dataset.sunSignBody = body.textContent;
   }

@@ -1,104 +1,141 @@
 /* ============================================================
    Zodiac Bee — shared design tokens & components
-   Lavender-plum ink / soft-lavender & deep-plum grounds / bumblebee-gold accent
-   Playfair Display (display) · Public Sans (body/UI) · IBM Plex Mono (data)
+   AURORA BLOOM — warm ivory/cream ground · sunrise coral-to-amber signature
+   accent · cool teal/aqua secondary accent · a light-mode-first "sunrise
+   wellness" reinterpretation of astrology (daylight & clarity, not shadow).
+   Fraunces (display) · Public Sans (body/UI) · IBM Plex Mono (data)
 
-   Palette follows the ZodiacBee Design System sheet (soft lavender #E0D6F3,
-   light purple #C3B1E1, bumblebee gold #F4C430). Two calls made against it:
-   1. Body/UI copy stays in Public Sans, not Playfair Display — the sheet's
-      own spec table renders every row in its display serif for demonstration,
-      but set at 14–16px in a chat thread or ledger it loses legibility.
-      Playfair Display carries headings, lead copy and numerals instead.
-   2. Solid-gold surfaces (buttons, badges, the send button) get dark ink
-      text/icons, not white — #F4C430 is far lighter than the old brass, and
-      white-on-gold fails contrast. --on-brass exists for exactly this.
+   This is a full retint of the token *system* below, not a new one — same
+   variable names, new values. Two calls carried forward, still true here:
+   1. Body/UI copy stays in Public Sans, not the display serif — legible at
+      14–16px in a chat thread or ledger where Fraunces would not be.
+      Fraunces carries headings, lead copy and numerals instead.
+   2. Solid-accent surfaces (buttons, badges, the send button) get dark ink
+      text/icons, not white — the sunrise gold/coral fill is too light for
+      white text to sit on. --on-brass exists for exactly this.
+   Every text-on-surface pairing below (and the icon-on-tint pairings that
+   carry meaning, not just decoration) was checked against WCAG AA with a
+   relative-luminance contrast calculation before being locked in — see
+   --ink-faint, --brass-ink, --accent-teal-deep and --accent-coral-deep for
+   where that check forced a *different* value than the "obvious" brand hue.
    ============================================================ */
 
 :root {
-  /* ---- light theme (default) ---- */
-  --ink: #2a1e42;
-  --ink-soft: #675c82;
-  --ink-faint: #9891ac;
-  --paper: #faf7fd;
-  --paper-raised: #ffffff;
-  --paper-sunken: #f1e9fa;
-  --line: #e6daf5;
-  --line-strong: #cdb8e8;
+  /* ---- light theme (default — this is the primary experience, not a
+     fallback before a dark-mode media query) ---- */
+  --ink: #33261c;
+  --ink-soft: #6b5847;
+  --ink-faint: #786450;
+  --paper: #fdf6ec;         /* warm ivory/cream ground — soft paper, not stark white */
+  --paper-raised: #fffdf9;
+  --paper-sunken: #f6e9d7;
+  --line: #ecdac0;
+  --line-strong: #ddc09a;
 
-  --brass: #f4c430;
-  --brass-strong: #dda916;
-  --brass-tint: #fcf0c4;
-  --brass-ink: #5c4300;
-  --on-brass: #3d2a14;
+  /* Signature sunrise accent — coral-pink through amber-gold. --brass* keeps
+     its name (button/badge fill role is unchanged) but is now this warm
+     family instead of a metallic gold. --brass-strong is a *background-fill*
+     hover tone only (button/send-button hover) — it reads too light for
+     text/icon-on-tint use, so real text/icon foregrounds use --brass-ink,
+     which was picked for contrast, not just for matching the fill. */
+  --brass: #ff9d52;
+  --brass-strong: #ff7a45;
+  --brass-tint: #fff0dc;
+  --brass-ink: #8a4416;
+  --on-brass: #34190a;
 
-  /* Soft-lavender / light-purple surface family — the sheet's other two
-     swatches. Used for icon-button fills, secondary-button accents and
-     tinted cards; never for large text-on-color (see --accent-violet below
-     for that role). */
-  --lavender: #e0d6f3;
-  --violet-wash: #c3b1e1;
+  /* Signature gradient family — the actual "coral-pink through amber-gold"
+     the brief calls for, used for CTA backgrounds, card top-border accents
+     and the sun/orb motif. */
+  --sunrise-coral: #ff8a65;
+  --sunrise-amber: #ffc453;
+  --gradient-sunrise: linear-gradient(135deg, var(--sunrise-coral) 0%, var(--sunrise-amber) 100%);
 
-  /* Cosmic accent trio — reserved for a handful of signature "alive"
-     moments (wordmark, chart reveal, hero cards) plus the secondary-button
-     ink, not general UI color. See the "Cosmic accents" section below for
-     where these get used. */
-  --accent-violet: #7c5cae;
-  --accent-magenta: #b84f8f;
-  --accent-teal: #1f8f81;
-  --gradient-cosmic: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-magenta) 55%, var(--accent-teal) 100%);
+  /* Cool tint surface family (formerly "soft-lavender") — used for icon-button
+     fills, secondary-button hover and tinted cards; retinted to a pale aqua
+     wash so the palette doesn't read as one-note warm. */
+  --lavender: #e4f4f1;
+  --violet-wash: #cbeae4;
 
-  --positive: #3f7c63;
-  --positive-tint: #e2efe9;
-  --warning: #b23b49;
-  --warning-tint: #f7e4e6;
+  /* Aurora accent trio — reserved for a handful of signature "alive" moments
+     (wordmark, chart reveal, hero cards) plus the secondary-button ink, not
+     general UI color. --accent-violet keeps its name but is now a deep teal
+     ink (not a purple) — the brief's "cool teal/aqua counterweight" doing
+     double duty as the one accent dark enough to use as real text/border.
+     --accent-teal is the brighter aqua brand tone for backgrounds, badges
+     and gradient stops. --accent-teal-deep / --accent-coral-deep exist only
+     for icon-on-tinted-chip contexts (home tile icons) where the bright
+     brand hues measured under 3:1 against their own tint and needed a
+     darker sibling to stay legible — see the tile-icon rules below. */
+  --accent-violet: #0e6a5f;
+  --accent-magenta: #ff7a59;
+  --accent-teal: #2bb3a3;
+  --accent-teal-deep: #12665b;
+  --accent-coral-deep: #b8401b;
+  --gradient-cosmic: linear-gradient(135deg, var(--accent-magenta) 0%, var(--brass) 50%, var(--accent-teal) 100%);
 
-  --focus-ring: #7c5cae;
+  --positive: #217a4c;
+  --positive-tint: #e3f3e7;
+  --warning: #b8362a;
+  --warning-tint: #fbe6e2;
 
-  --shadow-sm: 0 1px 2px rgba(42, 30, 66, 0.06), 0 1px 1px rgba(42, 30, 66, 0.04);
-  --shadow-md: 0 8px 24px rgba(42, 30, 66, 0.10), 0 2px 6px rgba(42, 30, 66, 0.06);
-  --shadow-lg: 0 24px 64px rgba(42, 30, 66, 0.18), 0 6px 16px rgba(42, 30, 66, 0.10);
+  --focus-ring: #17847a;
+
+  --shadow-sm: 0 1px 2px rgba(51, 38, 28, 0.08), 0 1px 1px rgba(51, 38, 28, 0.05);
+  --shadow-md: 0 8px 24px rgba(51, 38, 28, 0.12), 0 2px 6px rgba(51, 38, 28, 0.07);
+  --shadow-lg: 0 24px 64px rgba(51, 38, 28, 0.20), 0 6px 16px rgba(51, 38, 28, 0.12);
 
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 22px;
   --radius-pill: 999px;
 
-  --font-display: "Playfair Display", "Iowan Old Style", ui-serif, Georgia, serif;
+  --font-display: "Fraunces", "Iowan Old Style", ui-serif, Georgia, serif;
   --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
+/* ---- dark theme — a coherent, still-warm variant for users who force dark
+   (or whose system prefers it): deep warm espresso-brown grounds, not cold
+   navy/black, so "Aurora Bloom" reads as the same product after dark, just
+   later in its own day rather than switching to a different, moodier one. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ink: #f1eafb;
-    --ink-soft: #c7b8e0;
-    --ink-faint: #9483b3;
-    --paper: #1a1330;
-    --paper-raised: #241a3d;
-    --paper-sunken: #120c22;
-    --line: #3b2e5c;
-    --line-strong: #4e3d75;
+    --ink: #f5ece1;
+    --ink-soft: #d8c4b0;
+    --ink-faint: #a89178;
+    --paper: #241a13;
+    --paper-raised: #2f231a;
+    --paper-sunken: #1a120c;
+    --line: #4a382a;
+    --line-strong: #5c4633;
 
-    --brass: #f7ce4e;
-    --brass-strong: #ffdd6b;
-    --brass-tint: #3a2f12;
-    --brass-ink: #f4dfa0;
-    --on-brass: #2a1b0d;
+    --brass: #ffab6b;
+    --brass-strong: #ffbb7a;
+    --brass-tint: #3a2414;
+    --brass-ink: #ffcc99;
+    --on-brass: #2a1608;
 
-    --lavender: #2e2350;
-    --violet-wash: #3d2e5e;
+    --sunrise-coral: #ff9d76;
+    --sunrise-amber: #ffd27a;
+    --gradient-sunrise: linear-gradient(135deg, var(--sunrise-coral) 0%, var(--sunrise-amber) 100%);
 
-    --accent-violet: #ab8ee0;
-    --accent-magenta: #ef7ec0;
-    --accent-teal: #55e0cb;
-    --gradient-cosmic: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-magenta) 55%, var(--accent-teal) 100%);
+    --lavender: #16302c;
+    --violet-wash: #1f4741;
 
-    --positive: #7cc4a4;
-    --positive-tint: #17332a;
-    --warning: #e58a92;
-    --warning-tint: #3a1c22;
+    --accent-violet: #52d0bf;
+    --accent-magenta: #ff9376;
+    --accent-teal: #4fd9c8;
+    --accent-teal-deep: #4fd9c8;
+    --accent-coral-deep: #ff9376;
+    --gradient-cosmic: linear-gradient(135deg, var(--accent-magenta) 0%, var(--brass) 50%, var(--accent-teal) 100%);
 
-    --focus-ring: #ab8ee0;
+    --positive: #8fd0a8;
+    --positive-tint: #1c3324;
+    --warning: #ef9a8a;
+    --warning-tint: #3a2018;
+
+    --focus-ring: #4fd9c8;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -107,35 +144,41 @@
 }
 
 :root[data-theme="dark"] {
-  --ink: #f1eafb;
-  --ink-soft: #c7b8e0;
-  --ink-faint: #9483b3;
-  --paper: #1a1330;
-  --paper-raised: #241a3d;
-  --paper-sunken: #120c22;
-  --line: #3b2e5c;
-  --line-strong: #4e3d75;
+  --ink: #f5ece1;
+  --ink-soft: #d8c4b0;
+  --ink-faint: #a89178;
+  --paper: #241a13;
+  --paper-raised: #2f231a;
+  --paper-sunken: #1a120c;
+  --line: #4a382a;
+  --line-strong: #5c4633;
 
-  --brass: #f7ce4e;
-  --brass-strong: #ffdd6b;
-  --brass-tint: #3a2f12;
-  --brass-ink: #f4dfa0;
-  --on-brass: #2a1b0d;
+  --brass: #ffab6b;
+  --brass-strong: #ffbb7a;
+  --brass-tint: #3a2414;
+  --brass-ink: #ffcc99;
+  --on-brass: #2a1608;
 
-  --lavender: #2e2350;
-  --violet-wash: #3d2e5e;
+  --sunrise-coral: #ff9d76;
+  --sunrise-amber: #ffd27a;
+  --gradient-sunrise: linear-gradient(135deg, var(--sunrise-coral) 0%, var(--sunrise-amber) 100%);
 
-  --accent-violet: #ab8ee0;
-  --accent-magenta: #ef7ec0;
-  --accent-teal: #55e0cb;
-  --gradient-cosmic: linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-magenta) 55%, var(--accent-teal) 100%);
+  --lavender: #16302c;
+  --violet-wash: #1f4741;
 
-  --positive: #7cc4a4;
-  --positive-tint: #17332a;
-  --warning: #e58a92;
-  --warning-tint: #3a1c22;
+  --accent-violet: #52d0bf;
+  --accent-magenta: #ff9376;
+  --accent-teal: #4fd9c8;
+  --accent-teal-deep: #4fd9c8;
+  --accent-coral-deep: #ff9376;
+  --gradient-cosmic: linear-gradient(135deg, var(--accent-magenta) 0%, var(--brass) 50%, var(--accent-teal) 100%);
 
-  --focus-ring: #ab8ee0;
+  --positive: #8fd0a8;
+  --positive-tint: #1c3324;
+  --warning: #ef9a8a;
+  --warning-tint: #3a2018;
+
+  --focus-ring: #4fd9c8;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -186,13 +229,43 @@ img, svg { display: block; max-width: 100%; }
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 
+/* ---- motion primitives (route transitions + scroll reveal) ----
+   Both are driven entirely by CSS transition/animation properties, so the
+   global prefers-reduced-motion rule above (which zeroes every duration)
+   already freezes them for anyone who's asked for reduced motion — the JS
+   side (app.js, scripts/effects/bloom.js) only needs to skip the *timing*
+   logic (IntersectionObserver staggering, pointer-follow easing), not
+   re-implement the reduction itself. */
+
+/* Route transitions — app.js replays this class on #appMain / #onboardShell
+   on every navigation (see mountAppScreen / the onboarding route). */
+@keyframes route-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.view-transition { animation: route-fade-in 0.42s cubic-bezier(.16, 1, .3, 1) both; }
+
+/* Scroll-reveal — scripts/effects/bloom.js adds .is-revealed via
+   IntersectionObserver the first time an element with [data-reveal] enters
+   the viewport (and unobserves it immediately after, so this never keeps
+   watching offscreen elements it no longer needs to). Falls back to visible
+   immediately when JS can't run the observer or reduced motion is set. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+[data-reveal].is-revealed { opacity: 1; transform: translateY(0); }
+
 /* ---- typography ---- */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  color: var(--brass);
+  color: var(--brass-ink); /* not --brass itself — a small mono label needs
+    the contrast-checked ink tone, not the button-fill hue (see the --brass*
+    comment up top) */
   font-weight: 500;
 }
 .h1 {
@@ -400,7 +473,7 @@ img, svg { display: block; max-width: 100%; }
   max-width: 5.5rem;
 }
 .tab-item svg { width: 20px; height: 20px; }
-.tab-item[aria-current="page"] { color: var(--brass-strong); }
+.tab-item[aria-current="page"] { color: var(--brass-ink); }
 
 /* ---- buttons ---- */
 .btn {
@@ -420,11 +493,20 @@ img, svg { display: block; max-width: 100%; }
 .btn-primary {
   background: var(--brass);
   color: var(--on-brass);
+  background-image: var(--gradient-sunrise);
+  /* Magnetic-hover hook (see scripts/effects/bloom.js) — a pointer-following
+     nudge composed as its own transform layer via custom properties, so it
+     never fights the press-down feedback below (":active" appends its own
+     translateY on top of whatever offset the pointer left behind, rather
+     than one overwriting the other). Defaults to 0px so buttons that never
+     get a pointermove (touch, keyboard) render exactly as a plain button. */
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px));
 }
 .btn-primary:hover { background: var(--brass-strong); }
-/* Secondary-button ink — the one non-headline spot the cosmic-violet accent
-   is allowed outside its usual signature moments (see the --accent-violet
-   comment up top). Matches the sheet's "VIEW PROFILE" swatch. */
+.btn-primary:active { transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) translateY(1px); }
+/* Secondary-button ink — the one non-headline spot the aurora-teal accent is
+   allowed outside its usual signature moments (see the --accent-violet
+   comment up top; it's a deep teal now, not violet). */
 .btn-ghost {
   background: transparent;
   border-color: var(--accent-violet);
@@ -433,7 +515,7 @@ img, svg { display: block; max-width: 100%; }
 .btn-ghost:hover { background: var(--lavender); }
 .btn-text {
   background: transparent;
-  color: var(--brass-strong);
+  color: var(--brass-ink);
   padding: 0.4rem 0.2rem;
 }
 .btn-text:hover { text-decoration: underline; }
@@ -460,6 +542,41 @@ img, svg { display: block; max-width: 100%; }
   padding: 1.1rem;
 }
 .card-lg { border-radius: var(--radius-lg); padding: 1.5rem; }
+
+/* Signature card treatment — a soft shadow plus a thin gradient top-border
+   accent, replacing the flatter bordered-only look and standing in for the
+   glass-morphism the brief explicitly steers away from. --card-accent lets
+   one specific card override the gradient (see the onboarding chart-reveal
+   card, which sets it per zodiac element in onboarding.js) while every other
+   card here just gets the default sunrise gradient. Grouped as one rule per
+   radius family so the accent bar's corners always match the card's own. */
+.card, .tile-card, .product-card, .pack-card, .radio-card,
+.channel-card, .paymethod-option {
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+.card-lg, .sub-status-card { position: relative; box-shadow: var(--shadow-sm); }
+.card::before, .tile-card::before, .product-card::before, .pack-card::before,
+.radio-card::before, .channel-card::before, .paymethod-option::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--card-accent, var(--gradient-sunrise));
+  opacity: 0.9;
+  pointer-events: none;
+}
+.card-lg::before, .sub-status-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--card-accent, var(--gradient-sunrise));
+  opacity: 0.9;
+  pointer-events: none;
+}
 .section {
   max-width: 780px;
   margin: 0 auto;
@@ -768,7 +885,7 @@ img, svg { display: block; max-width: 100%; }
    Screen: Wallet
    ============================================================ */
 .balance-hero {
-  background: linear-gradient(155deg, var(--ink) 0%, #3b2f66 55%, #4a2f57 100%);
+  background: linear-gradient(155deg, var(--ink) 0%, #6b3d24 55%, #a8501f 100%);
   /* Fixed light value, not var(--paper) — this card's ground stays dark in
      both themes (see the dark-theme background override just below), but
      --paper itself flips to near-black in dark theme. Using the token here
@@ -784,9 +901,9 @@ img, svg { display: block; max-width: 100%; }
   position: relative;
   overflow: hidden;
 }
-:root[data-theme="dark"] .balance-hero { background: linear-gradient(155deg, #1c1a37 0%, #33285a 55%, #3d2a4c 100%); }
+:root[data-theme="dark"] .balance-hero { background: linear-gradient(155deg, #1f150e 0%, #4a2c18 55%, #6b3a1f 100%); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .balance-hero { background: linear-gradient(155deg, #1c1a37 0%, #33285a 55%, #3d2a4c 100%); }
+  :root:not([data-theme="light"]) .balance-hero { background: linear-gradient(155deg, #1f150e 0%, #4a2c18 55%, #6b3a1f 100%); }
 }
 .balance-hero::after {
   content: "";
@@ -851,12 +968,12 @@ img, svg { display: block; max-width: 100%; }
 .paymethod-row { display: flex; align-items: center; gap: 0.85rem; }
 .card-glyph {
   width: 2.6rem; height: 1.85rem; border-radius: 5px;
-  background: linear-gradient(135deg, var(--ink) 0%, #4a4478 100%);
+  background: linear-gradient(135deg, var(--ink) 0%, #6b4a30 100%);
   flex-shrink: 0; display: grid; place-items: center;
 }
-:root[data-theme="dark"] .card-glyph { background: linear-gradient(135deg, #423e6e 0%, #2b2850 100%); }
+:root[data-theme="dark"] .card-glyph { background: linear-gradient(135deg, #4a3624 0%, #2b1e14 100%); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .card-glyph { background: linear-gradient(135deg, #423e6e 0%, #2b2850 100%); }
+  :root:not([data-theme="light"]) .card-glyph { background: linear-gradient(135deg, #4a3624 0%, #2b1e14 100%); }
 }
 .card-glyph svg { width: 15px; height: 15px; color: var(--brass); }
 .paymethod-text { flex: 1; }
@@ -938,7 +1055,7 @@ img, svg { display: block; max-width: 100%; }
 .channel-card:hover { border-color: var(--line-strong); }
 .channel-card[aria-checked="true"] { border-color: var(--brass); background: var(--brass-tint); }
 .channel-card svg { width: 19px; height: 19px; color: var(--ink-soft); flex-shrink: 0; }
-.channel-card[aria-checked="true"] svg { color: var(--brass-strong); }
+.channel-card[aria-checked="true"] svg { color: var(--brass-ink); }
 .check-box {
   width: 1.15rem; height: 1.15rem; border-radius: 5px;
   border: 1.5px solid var(--line-strong); flex-shrink: 0;
@@ -973,7 +1090,7 @@ img, svg { display: block; max-width: 100%; }
   padding: 0.8rem 0.95rem; border-radius: var(--radius-sm);
   background: var(--lavender); font-size: 0.88rem;
 }
-.next-send svg { width: 17px; height: 17px; color: var(--brass-strong); flex-shrink: 0; }
+.next-send svg { width: 17px; height: 17px; color: var(--brass-ink); flex-shrink: 0; }
 .sub-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
 .delivery-preview {
@@ -1010,12 +1127,12 @@ img, svg { display: block; max-width: 100%; }
   overflow: hidden;
 }
 .product-art svg { width: 34%; height: 34%; opacity: 0.85; }
-.product-art.tone-a { background: radial-gradient(120% 130% at 20% 15%, #4c4482 0%, #201d3d 60%); color: #d9c79a; }
-.product-art.tone-b { background: radial-gradient(120% 130% at 80% 20%, #7c6238 0%, #2c2413 65%); color: #f1e6cf; }
-.product-art.tone-c { background: radial-gradient(120% 130% at 25% 85%, #3a5a4e 0%, #16241f 65%); color: #cfe3d9; }
-.product-art.tone-d { background: radial-gradient(120% 130% at 75% 80%, #5c3a44 0%, #241618 65%); color: #e9d3d7; }
+.product-art.tone-a { background: radial-gradient(120% 130% at 20% 15%, #7a3d1f 0%, #2c1710 60%); color: #ffd9b0; }
+.product-art.tone-b { background: radial-gradient(120% 130% at 80% 20%, #8a6a1f 0%, #2c2310 65%); color: #ffe9b0; }
+.product-art.tone-c { background: radial-gradient(120% 130% at 25% 85%, #1f5a4e 0%, #0d211d 65%); color: #cdece3; }
+.product-art.tone-d { background: radial-gradient(120% 130% at 75% 80%, #7a2f3f 0%, #29131a 65%); color: #f2cfd6; }
 .product-body { padding: 0.9rem 1rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
-.product-cat { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brass-strong); }
+.product-cat { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brass-ink); }
 .product-title { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; }
 .product-desc { font-size: 0.85rem; color: var(--ink-soft); flex: 1; }
 .product-link {
@@ -1046,10 +1163,50 @@ img, svg { display: block; max-width: 100%; }
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(120% 90% at 85% -10%, var(--brass-tint) 0%, transparent 55%),
-    radial-gradient(90% 70% at 6% 100%, color-mix(in srgb, var(--accent-violet) 16%, transparent) 0%, transparent 60%),
-    var(--paper);
+  background: var(--paper);
+  position: relative;
+  overflow: hidden; /* contains the drifting blobs below */
+}
+/* Aurora blobs — soft, slow-drifting gradient-mesh shapes behind the
+   onboarding card. Pure CSS (blurred, absolutely-positioned pseudo-elements
+   animating transform/opacity only — no layout properties, so this never
+   triggers layout or paint thrashing). Negative z-index keeps them behind
+   the shell's real content, matching the wordmark-halo convention above.
+   prefers-reduced-motion is handled globally (see the reset section up top,
+   which zeroes every animation-duration to ~0) — no extra gating needed. */
+.onboard-shell::before,
+.onboard-shell::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  will-change: transform;
+}
+.onboard-shell::before {
+  width: 26rem; height: 26rem;
+  top: -8rem; right: -6rem;
+  background: radial-gradient(circle at 35% 35%, var(--sunrise-amber) 0%, var(--sunrise-coral) 55%, transparent 75%);
+  opacity: 0.45;
+  animation: blob-drift-a 24s ease-in-out infinite;
+}
+.onboard-shell::after {
+  width: 22rem; height: 22rem;
+  bottom: -9rem; left: -7rem;
+  background: radial-gradient(circle at 60% 40%, var(--accent-teal) 0%, transparent 72%);
+  opacity: 0.32;
+  animation: blob-drift-b 28s ease-in-out infinite;
+}
+@keyframes blob-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-3.5rem, 2.5rem) scale(1.08); }
+  66% { transform: translate(-1.5rem, -2rem) scale(0.96); }
+}
+@keyframes blob-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(3rem, -2.5rem) scale(1.1); }
+  75% { transform: translate(1.5rem, 1.5rem) scale(0.94); }
 }
 .onboard-topbar {
   display: flex; align-items: center; justify-content: space-between;
@@ -1127,11 +1284,14 @@ img, svg { display: block; max-width: 100%; }
   display: flex; flex-direction: column; align-items: center; gap: 1rem;
   text-align: center; padding: 1rem 0;
 }
+/* The signature hero motif — a gently pulsing sunrise orb (replaces any
+   moon/night-sky treatment). Reused visually wherever the app needs a
+   "this is the alive, optimistic moment" beat; this is its home screen. */
 .sun-glyph {
   position: relative;
   width: 5rem; height: 5rem;
   border-radius: 50%;
-  background: linear-gradient(155deg, var(--brass) 0%, var(--brass-strong) 100%);
+  background: var(--gradient-sunrise);
   display: grid; place-items: center;
   color: var(--on-brass);
   box-shadow: 0 0 0 6px var(--brass-tint);
@@ -1141,7 +1301,9 @@ img, svg { display: block; max-width: 100%; }
 .sun-glyph svg { width: 2.4rem; height: 2.4rem; }
 /* Faint orbit ring — the chart-reveal moment is the emotional payoff of
    onboarding, so it gets the one "orbit" treatment in the whole prototype.
-   Sized outside the glyph's own halo so it never overlaps the icon. */
+   Sized outside the glyph's own halo so it never overlaps the icon. Teal
+   and coral together read as the "aurora" half of Aurora Bloom orbiting the
+   sunrise-toned sun itself. */
 .sun-glyph::after {
   content: "";
   position: absolute;
@@ -1149,13 +1311,13 @@ img, svg { display: block; max-width: 100%; }
   border-radius: 50%;
   border: 1.5px solid transparent;
   border-top-color: color-mix(in srgb, var(--accent-teal) 55%, transparent);
-  border-right-color: color-mix(in srgb, var(--accent-violet) 40%, transparent);
+  border-right-color: color-mix(in srgb, var(--accent-magenta) 45%, transparent);
   animation: orbit-spin 9s linear infinite;
 }
 @keyframes reveal-pop { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes sun-glow {
   0%, 100% { box-shadow: 0 0 0 6px var(--brass-tint); }
-  50% { box-shadow: 0 0 0 6px var(--brass-tint), 0 0 28px 6px color-mix(in srgb, var(--accent-violet) 40%, transparent); }
+  50% { box-shadow: 0 0 0 6px var(--brass-tint), 0 0 28px 6px color-mix(in srgb, var(--accent-teal) 40%, transparent); }
 }
 @keyframes orbit-spin { to { transform: rotate(360deg); } }
 .loading-row { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 2rem 0; text-align: center; }
@@ -1173,20 +1335,55 @@ img, svg { display: block; max-width: 100%; }
 .home-hero {
   padding: 0.2rem 0 0.4rem;
   position: relative;
+  /* No overflow:hidden here on purpose — the blobs below (and the hero-orb)
+     are meant to softly bleed into the tile grid beneath, the same way the
+     original static wash did; z-index:-1 keeps them behind all real content
+     regardless. */
 }
-/* Ambient cosmic wash behind the entry-point headline — static (no motion
-   budget spent here; the wordmark pulse already carries this screen). */
-.home-hero::before {
+/* Ambient aurora wash behind the entry-point headline — two slow-drifting
+   blurred blobs (sunrise + teal) standing in for the "gradient-mesh" hero
+   background the brief calls for. Transform/opacity only, so this stays
+   compositor-only and cheap even while the headline text reflows above it;
+   prefers-reduced-motion is handled globally (see the reset section). */
+.home-hero::before,
+.home-hero::after {
   content: "";
   position: absolute;
-  inset: -1rem -1.5rem auto -1.5rem;
-  height: 11rem;
   z-index: -1;
-  background:
-    radial-gradient(75% 100% at 12% 0%, color-mix(in srgb, var(--accent-violet) 14%, transparent) 0%, transparent 60%),
-    radial-gradient(65% 100% at 92% 15%, color-mix(in srgb, var(--brass) 16%, transparent) 0%, transparent 55%);
+  border-radius: 50%;
+  filter: blur(46px);
   pointer-events: none;
+  will-change: transform;
 }
+.home-hero::before {
+  width: 14rem; height: 14rem;
+  top: -6rem; left: -3rem;
+  background: radial-gradient(circle at 40% 40%, var(--accent-teal) 0%, transparent 70%);
+  opacity: 0.22;
+  animation: blob-drift-b 26s ease-in-out infinite;
+}
+.home-hero::after {
+  width: 16rem; height: 16rem;
+  top: -7rem; right: -4rem;
+  background: radial-gradient(circle at 55% 35%, var(--sunrise-amber) 0%, var(--sunrise-coral) 60%, transparent 75%);
+  opacity: 0.26;
+  animation: blob-drift-a 22s ease-in-out infinite;
+}
+/* Signature hero motif — a small pulsing sunrise orb tucked beside the
+   greeting, the same "alive" gradient-orb beat as the onboarding sun-glyph,
+   scaled down for a single-line header. Purely decorative (aria-hidden in
+   the markup), so it carries no semantics of its own. */
+.hero-orb {
+  position: absolute;
+  top: -0.35rem; right: 0.4rem;
+  width: 2.6rem; height: 2.6rem;
+  border-radius: 50%;
+  background: var(--gradient-sunrise);
+  box-shadow: 0 0 0 5px var(--brass-tint);
+  animation: sun-glow 3.6s ease-in-out infinite;
+  z-index: -1;
+}
+@media (max-width: 480px) { .hero-orb { display: none; } }
 .tile-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1210,7 +1407,7 @@ img, svg { display: block; max-width: 100%; }
   width: 2.75rem; height: 2.75rem;
   border-radius: var(--radius-md);
   background: var(--brass-tint);
-  color: var(--brass-strong);
+  color: var(--brass-ink);
   display: grid; place-items: center;
   flex-shrink: 0;
 }
@@ -1219,8 +1416,8 @@ img, svg { display: block; max-width: 100%; }
    in the app where all three show up together, since this is the entry
    point to the whole product. Tinted icon chips only; cards stay plain. */
 .tile-card:nth-child(2) .tile-icon { background: color-mix(in srgb, var(--accent-violet) 18%, var(--paper-sunken)); color: var(--accent-violet); }
-.tile-card:nth-child(3) .tile-icon { background: color-mix(in srgb, var(--accent-teal) 18%, var(--paper-sunken)); color: var(--accent-teal); }
-.tile-card:nth-child(4) .tile-icon { background: color-mix(in srgb, var(--accent-magenta) 18%, var(--paper-sunken)); color: var(--accent-magenta); }
+.tile-card:nth-child(3) .tile-icon { background: color-mix(in srgb, var(--accent-teal) 18%, var(--paper-sunken)); color: var(--accent-teal-deep); }
+.tile-card:nth-child(4) .tile-icon { background: color-mix(in srgb, var(--accent-magenta) 18%, var(--paper-sunken)); color: var(--accent-coral-deep); }
 .tile-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.3rem; }
 .tile-text-head { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .tile-text strong { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
@@ -1300,7 +1497,7 @@ html.is-desktop-gate #toast {
   aspect-ratio: 375 / 812;
   padding: 14px;
   border-radius: 46px;
-  background: #1b1330;
+  background: #241a13;
   box-shadow: var(--shadow-lg), 0 0 0 2px var(--line-strong);
 }
 .phone-frame-notch {
@@ -1308,7 +1505,7 @@ html.is-desktop-gate #toast {
   top: 14px; left: 50%;
   transform: translateX(-50%);
   width: 40%; height: 22px;
-  background: #1b1330;
+  background: #241a13;
   border-radius: 0 0 14px 14px;
   z-index: 1;
 }

@@ -1,6 +1,7 @@
 // Zodiac Bee — Astrologer picks: a static curated catalog (real product
 // copy and outbound retailer links), with client-side filter/view controls.
 import { icon, showToast } from "../utils.js";
+import { initScrollReveal } from "../effects/bloom.js";
 
 const PRODUCTS = [
   {
@@ -61,9 +62,9 @@ const PRODUCTS = [
 
 const CATEGORIES = ["all", "Crystals", "Books", "Rituals", "Remedies"];
 
-function cardHtml(p) {
+function cardHtml(p, i) {
   return `
-    <article class="product-card" data-category="${p.category}">
+    <article class="product-card" data-category="${p.category}" data-reveal style="transition-delay:${(i % 3) * 70}ms">
       <div class="product-art ${p.tone}">${p.art}</div>
       <div class="product-body">
         <span class="product-cat">${p.category}</span>
@@ -129,4 +130,6 @@ export function renderProducts(main) {
     if (!link) return;
     showToast("Opening " + link.getAttribute("data-retailer") + " in a new tab…");
   });
+
+  return initScrollReveal(main);
 }

@@ -1,6 +1,7 @@
 // Zodiac Bee — Daily reading (subscription) view.
 import { icon, showToast, wireModal, escapeHtml } from "../utils.js";
 import { store, subscribeToReading, editSubscription, toggleSubscriptionPause, cancelSubscription } from "../store.js";
+import { initScrollReveal } from "../effects/bloom.js";
 
 const PLANS = [
   { id: "Monthly plan", label: "Monthly", detail: "Billed every month", price: "$4.99/mo" },
@@ -32,7 +33,7 @@ export function renderSubscription(main) {
             <h1 class="h1">Your daily reading</h1>
             <p class="lede">A short, personalized horoscope delivered every morning based on your chart.</p>
           </div>
-          <div class="sub-status-card">
+          <div class="sub-status-card" data-reveal>
             <div class="sub-status-top">
               <div>
                 <span class="status-pill" id="statusPill">Active</span>
@@ -41,7 +42,7 @@ export function renderSubscription(main) {
               <button class="btn-text" id="editBtn">Change plan or channels</button>
             </div>
             <div class="next-send" id="nextSend"></div>
-            <div class="delivery-preview">${icon.moon}<span id="previewLine">${previewLine()}</span></div>
+            <div class="delivery-preview">${icon.sun}<span id="previewLine">${previewLine()}</span></div>
             <div class="sub-actions">
               <button class="btn btn-ghost" id="pauseBtn">Pause deliveries</button>
               <button class="btn-danger-text" id="cancelBtn">Cancel subscription</button>
@@ -61,8 +62,8 @@ export function renderSubscription(main) {
             <h2 class="h2" style="font-size:1.15rem">Plan</h2>
             <div class="plan-grid" id="planGrid">
               ${PLANS.map(
-                (p) => `
-                <button class="radio-card" data-plan="${p.id}" aria-checked="${p.id === selectedPlan}">
+                (p, i) => `
+                <button class="radio-card" data-plan="${p.id}" aria-checked="${p.id === selectedPlan}" data-reveal style="transition-delay:${i * 60}ms">
                   <span class="radio-card-main">
                     <span class="dot"></span>
                     <span class="radio-card-text"><strong>${p.label}</strong><span class="small">${p.detail}</span></span>
@@ -79,8 +80,8 @@ export function renderSubscription(main) {
             <p class="small">Choose one or more. Each send uses 1 credit regardless of how many channels you pick.</p>
             <div class="channel-grid" id="channelGrid">
               ${CHANNELS.map(
-                (c) => `
-                <button class="channel-card" data-channel="${c.id}" aria-checked="${selectedChannels.has(c.id)}">
+                (c, i) => `
+                <button class="channel-card" data-channel="${c.id}" aria-checked="${selectedChannels.has(c.id)}" data-reveal style="transition-delay:${i * 60}ms">
                   ${c.icon}
                   <span class="channel-card-text"><strong>${c.label}</strong><span class="fine">${c.detail}</span></span>
                   <span class="check-box">${icon.check}</span>
@@ -126,10 +127,25 @@ export function renderSubscription(main) {
     return icon.clock + "<span>" + text + "</span>";
   }
 
+  // Whichever of pickerView/manageView is hidden right now flips visible
+  // without this module ever re-rendering (subscribing/editing just toggles
+  // the two `hidden` flags below), so a single scroll-reveal pass taken at
+  // mount would leave [data-reveal] cards in the *other* view stuck at
+  // opacity:0 forever once it's shown. refreshReveal() re-observes current
+  // DOM state every time renderManage() runs instead — cheap (disconnects
+  // the previous observer first) and correct in both directions; an already
+  // -revealed element just gets re-observed and immediately re-unobserved.
+  let disconnectReveal = () => {};
+  function refreshReveal() {
+    disconnectReveal();
+    disconnectReveal = initScrollReveal(main);
+  }
+
   function renderManage() {
     const sub = store.state.subscription;
     pickerView.hidden = sub.subscribed;
     manageView.hidden = !sub.subscribed;
+    refreshReveal();
     if (!sub.subscribed) return;
 
     const planMeta = PLANS.find((p) => p.id === sub.plan);
@@ -199,5 +215,9 @@ export function renderSubscription(main) {
   });
 
   renderManage();
-  return store.subscribe(renderManage);
+  const unsubscribe = store.subscribe(renderManage);
+  return () => {
+    unsubscribe();
+    disconnectReveal();
+  };
 }

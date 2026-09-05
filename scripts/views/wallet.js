@@ -1,6 +1,7 @@
 // Zodiac Bee — Wallet view: balance, recharge packs, payment method, ledger.
 import { icon, showToast, wireModal, escapeHtml } from "../utils.js";
 import { store, purchasePack, addCard, setDefaultCard, setAutoRecharge } from "../store.js";
+import { initScrollReveal } from "../effects/bloom.js";
 
 const PACKS = [
   { tokens: 50, price: "4.99" },
@@ -61,8 +62,8 @@ export function renderWallet(main) {
         </div>
         <div class="pack-grid" id="packGrid" role="radiogroup" aria-label="Token pack">
           ${PACKS.map(
-            (p) => `
-            <button class="pack-card" role="radio" data-tokens="${p.tokens}" data-price="${p.price}" aria-checked="${p === selectedPack}">
+            (p, i) => `
+            <button class="pack-card" role="radio" data-tokens="${p.tokens}" data-price="${p.price}" aria-checked="${p === selectedPack}" data-reveal style="transition-delay:${i * 60}ms">
               ${p.best ? '<span class="pack-card-best">Best value</span>' : ""}
               <span class="pack-card-tokens mono-stat">${p.tokens} tokens</span>
               <span class="pack-card-price">$${p.price}</span>
@@ -76,14 +77,14 @@ export function renderWallet(main) {
         <p class="fine">Illustrative pricing — no real payment processor is connected, so recharges are simulated locally.</p>
       </div>
 
-      <div class="stack">
+      <div class="stack" data-reveal>
         <div class="page-head"><h2 class="h2">Payment method</h2></div>
         <div id="paymentMethodCard"></div>
         <p class="fine">In production, card capture happens in Stripe-hosted checkout — Zodiac Bee never stores your card number.</p>
       </div>
 
       <div class="stack">
-        <div class="card">
+        <div class="card" data-reveal>
           <div class="switch-row">
             <div>
               <h3 class="h3">Auto-recharge</h3>
@@ -97,7 +98,7 @@ export function renderWallet(main) {
 
       <div class="stack" id="activity">
         <div class="page-head"><h2 class="h2">Recent activity</h2></div>
-        <div class="card">
+        <div class="card" data-reveal>
           <ul class="ledger-list" id="ledgerList"></ul>
         </div>
       </div>
@@ -287,5 +288,10 @@ export function renderWallet(main) {
   renderSummary();
   renderAll();
 
-  return store.subscribe(renderAll);
+  const unsubscribe = store.subscribe(renderAll);
+  const disconnectReveal = initScrollReveal(main);
+  return () => {
+    unsubscribe();
+    disconnectReveal();
+  };
 }

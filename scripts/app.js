@@ -10,6 +10,7 @@ import { renderWallet } from "./views/wallet.js";
 import { renderSubscription } from "./views/subscription.js";
 import { renderProducts } from "./views/products.js";
 import { renderOnboarding } from "./views/onboarding.js";
+import { initMagneticCTAs, replayViewTransition } from "./effects/bloom.js";
 
 // ---- Desktop gate ------------------------------------------------------
 // Zodiac Bee is mobile-only: a wide top-level window shows the "use your
@@ -69,7 +70,9 @@ function bootApp() {
     setActiveNav(name);
     appMain.className = "app-main"; // reset any per-view scoping class (e.g. chat-scope) left by the previous screen
     window.scrollTo(0, 0);
-    return render(appMain);
+    const result = render(appMain);
+    replayViewTransition(appMain); // tasteful fade + slide on every route change (see scripts/effects/bloom.js)
+    return result;
   }
 
   router.register("home", () => mountAppScreen("home", renderHome));
@@ -82,7 +85,9 @@ function bootApp() {
     onboardShell.hidden = false;
     document.title = TITLES.onboarding + " · Zodiac Bee";
     window.scrollTo(0, 0);
-    return renderOnboarding(onboardShell);
+    const result = renderOnboarding(onboardShell);
+    replayViewTransition(onboardShell);
+    return result;
   });
 
   router.start({
@@ -127,6 +132,12 @@ function bootApp() {
     }
     document.documentElement.setAttribute("data-theme", next);
   });
+
+  // ---- Aurora Bloom: magnetic CTA hover ----------------------------------
+  // Delegated at the document level inside scripts/effects/bloom.js, so this
+  // one call covers every .btn-primary on every screen, including ones
+  // rendered long after boot — no per-view wiring needed.
+  initMagneticCTAs();
 
   // ---- PWA: install prompt ----------------------------------------------
   const installBtn = document.getElementById("installBtn");

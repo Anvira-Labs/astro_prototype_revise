@@ -12,6 +12,7 @@ export function renderHome(main) {
   main.innerHTML = `
     <div class="section section-wide">
       <div class="home-hero page-head">
+        <span class="hero-orb" aria-hidden="true"></span>
         <span class="eyebrow">${greeting}</span>
         <h1 class="h1" style="margin-top:.4rem;">Where do you want to go?</h1>
         <p class="lede" style="margin-top:.5rem;">Jump into a conversation, manage your tokens, or check in on today's reading.</p>
